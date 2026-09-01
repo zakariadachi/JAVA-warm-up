@@ -1,155 +1,467 @@
-___1___- ____Java—Lambda Expressions___
+# 1 - Java — Lambda Expressions
 
-Documentation + Exercices pratiques
+## Documentation + Exercices pratiques
 
-Objectif : comprendre les expressions lambda, leur syntaxe, leur rôle et leur lien avec les Functional Interfaces, puis pratiquer sans regarder les solutions.
+**Objectif :** comprendre les expressions lambda, leur syntaxe, leur rôle et leur lien avec les Functional Interfaces, puis pratiquer sans regarder les solutions.
 
-1. C’est quoi une Lambda ?
+---
 
-Une expression lambda est une manière courte d’écrire un comportement (une action ou une règle) qu’on peut notamment passer à une méthode. Les lambdas ont été introduites avec Java 8.
+# 1. C'est quoi une Lambda ?
+
+Une expression lambda est une manière courte d'écrire un **comportement** (une action ou une règle) qu'on peut notamment passer à une méthode.
+
+Les lambdas ont été introduites avec **Java 8**.
+
+### Exemple
+
+```java
+x -> x * 2
+```
+
+Cela signifie :
+
+> « prends `x` et retourne `x` multiplié par 2 ».
+
+---
+
+# 2. Syntaxe
+
+### Forme générale
+
+```java
+(parameters) -> expression
+```
+
+### Pour plusieurs instructions
+
+```java
+(parameters) -> {
+    instructions;
+    return result;
+}
+```
+
+---
+
+# 3. Les différents cas
+
+## Aucun paramètre
+
+```java
+() -> System.out.println("Hello")
+```
+
+---
+
+## Un paramètre
+
+```java
+x -> x * 2
+```
+
+Les parenthèses sont facultatives lorsqu'il n'y a qu'un seul paramètre.
+
+---
+
+## Un paramètre avec parenthèses
+
+```java
+(x) -> x * 2
+```
+
+Les deux formes sont valides :
+
+```java
+x -> x * 2
+```
+
+```java
+(x) -> x * 2
+```
+
+---
+
+## Deux paramètres
+
+```java
+(a, b) -> a + b
+```
+
+---
+
+## Plusieurs instructions
+
+```java
+x -> {
+    System.out.println(x);
+    return x * 2;
+}
+```
+
+Lorsque le corps contient plusieurs instructions, on utilise `{}`.
+
+---
+
+# 4. Pourquoi utiliser les Lambdas ?
+
+Les Lambda Expressions permettent notamment de :
+
+* réduire le code répétitif ;
+* passer un comportement comme argument ;
+* travailler facilement avec les collections ;
+* utiliser des APIs comme `forEach`, `removeIf` et `sort` ;
+* utiliser les Streams ;
+* faciliter la programmation fonctionnelle.
+
+---
+
+# 5. Lambda et Functional Interface
+
+Une lambda a besoin d'un **contexte** qui indique la forme du comportement attendu.
+
+En Java, ce contexte est souvent une **Functional Interface**.
+
+Une Functional Interface possède **une seule méthode abstraite**.
+
+### Exemple
+
+```java
+@FunctionalInterface
+interface Calculator {
+    int calculate(int x);
+}
+```
+
+On peut ensuite utiliser une Lambda :
+
+```java
+Calculator calc = x -> x * 2;
+```
+
+Puis appeler la méthode :
+
+```java
+System.out.println(calc.calculate(5));
+```
+
+Résultat :
+
+```text
+10
+```
+
+---
+
+# 6. @FunctionalInterface
+
+`@FunctionalInterface` indique au compilateur que l'interface doit respecter la règle d'une seule méthode abstraite.
+
+L'annotation n'est **pas obligatoire** pour qu'une interface soit fonctionnelle.
+
+Cependant, elle permet au compilateur de vérifier que l'interface respecte bien cette règle.
 
 Exemple :
 
-x -> x * 2
-
-Cela signifie : « prends x et retourne x multiplié par 2 ».
-
-2. Syntaxe
-
-Forme générale :
-
-(parameters) -> expression
-
-Ou, pour plusieurs instructions :
-
-(parameters) -> {
-instructions;
-return result;
-}
-
-3. Les différents cas
-
-Aucun paramètre
-
-() -> System.out.println("Hello")
-
-Un paramètre
-
-x -> x * 2
-
-Un paramètre avec parenthèses
-
-(x) -> x * 2
-
-Deux paramètres
-
-(a, b) -> a + b
-
-Plusieurs instructions
-
-x -> {
-System.out.println(x);
-return x * 2;
-}
-
-4. Pourquoi utiliser les Lambdas ?
-
-Réduire le code répétitif.
-
-Passer un comportement comme argument.
-
-Travailler facilement avec les collections.
-
-Utiliser des APIs comme forEach, removeIf et sort.
-
-Utiliser les Streams et la programmation fonctionnelle.
-
-5. Lambda et Functional Interface
-
-Une lambda a besoin d’un contexte qui indique la forme du comportement attendu. En Java, ce contexte est souvent une Functional Interface.
-
-Une Functional Interface possède une seule méthode abstraite.
-
+```java
 @FunctionalInterface
 interface Calculator {
-int calculate(int x);
+    int calculate(int x);
 }
+```
 
-Calculator calc = x -> x * 2;
+Si on ajoute une deuxième méthode abstraite :
 
-System.out.println(calc.calculate(5));
+```java
+@FunctionalInterface
+interface Calculator {
 
-Résultat : 10
+    int calculate(int x);
 
-6. @FunctionalInterface
+    int multiply(int x);
+}
+```
 
-@FunctionalInterface indique au compilateur que l’interface doit respecter la règle d’une seule méthode abstraite. L’annotation n’est pas obligatoire pour qu’une interface soit fonctionnelle, mais elle permet au compilateur de vérifier cette règle.
+Le compilateur signalera une erreur.
 
-7. Interfaces fonctionnelles Java à connaître
+---
 
-Interface
+# 7. Interfaces fonctionnelles Java à connaître
 
-Forme
+Java fournit plusieurs interfaces fonctionnelles très utilisées.
 
-Exemple
+| Interface       | Forme         | Exemple                      |
+| --------------- | ------------- | ---------------------------- |
+| `Predicate<T>`  | `T → boolean` | `age -> age >= 18`           |
+| `Function<T,R>` | `T → R`       | `s -> s.length()`            |
+| `Consumer<T>`   | `T → void`    | `s -> System.out.println(s)` |
+| `Supplier<T>`   | `() → T`      | `() -> Math.random()`        |
 
-Predicate<T>
+---
 
-T → boolean
+## Predicate<T>
 
-age -> age >= 18
+Un `Predicate` reçoit une valeur et retourne un `boolean`.
 
-Function<T,R>
+```java
+Predicate<Integer> isAdult = age -> age >= 18;
+```
 
-T → R
+Exemple :
 
-s -> s.length()
+```java
+System.out.println(isAdult.test(20));
+```
 
-Consumer<T>
+Résultat :
 
-T → void
+```text
+true
+```
 
-s -> System.out.println(s)
+---
 
-Supplier<T>
+## Function<T, R>
 
-() → T
+Une `Function` reçoit une valeur et retourne une autre valeur.
 
-() -> Math.random()
+```java
+Function<String, Integer> length = s -> s.length();
+```
 
-8. Exemples d’utilisation
+Exemple :
 
-forEach :
+```java
+System.out.println(length.apply("Java"));
+```
 
+Résultat :
+
+```text
+4
+```
+
+---
+
+## Consumer<T>
+
+Un `Consumer` reçoit une valeur mais ne retourne rien.
+
+```java
+Consumer<String> print = s -> System.out.println(s);
+```
+
+Exemple :
+
+```java
+print.accept("Hello");
+```
+
+---
+
+## Supplier<T>
+
+Un `Supplier` ne reçoit aucun paramètre mais retourne une valeur.
+
+```java
+Supplier<Double> random = () -> Math.random();
+```
+
+Exemple :
+
+```java
+System.out.println(random.get());
+```
+
+---
+
+# 8. Exemples d'utilisation
+
+Les Lambda Expressions sont très utilisées avec les collections.
+
+## forEach
+
+```java
 List<String> names = List.of("Ali", "Sara", "Omar");
 
 names.forEach(name -> System.out.println(name));
+```
 
-removeIf :
+La lambda :
 
-List<Integer> numbers = new ArrayList<>(List.of(1, 2, 3, 4, 5));
+```java
+name -> System.out.println(name)
+```
+
+est exécutée pour chaque élément de la liste.
+
+---
+
+## removeIf
+
+```java
+List<Integer> numbers =
+        new ArrayList<>(List.of(1, 2, 3, 4, 5));
 
 numbers.removeIf(n -> n % 2 == 0);
+```
 
-sort :
+La condition :
+
+```java
+n -> n % 2 == 0
+```
+
+signifie :
+
+> supprimer les nombres qui sont pairs.
+
+Résultat :
+
+```text
+1
+3
+5
+```
+
+---
+
+## sort
+
+```java
+List<Integer> numbers =
+        new ArrayList<>(List.of(5, 2, 8, 1, 3));
 
 numbers.sort((a, b) -> a - b);
+```
 
-9. À retenir
+Résultat :
 
-Lambda = manière courte d’écrire un comportement.
+```text
+1
+2
+3
+5
+8
+```
 
-Syntaxe principale : (parameters) -> expression.
+---
 
-Une lambda est généralement utilisée avec une Functional Interface.
+# 9. Lambda avec une méthode
 
-Une Functional Interface possède une seule méthode abstraite.
+Une Lambda peut être passée directement comme argument à une méthode.
 
-Java 8 a introduit les lambdas.
+Exemple :
 
-Les lambdas sont très utilisées avec les collections et les Streams.
+```java
+List<String> names =
+        List.of("Ali", "Sara", "Omar");
 
-# Les différentes versions du JDK en Java
+names.forEach(name -> System.out.println(name));
+```
+
+Ici :
+
+```java
+name -> System.out.println(name)
+```
+
+est passée à :
+
+```java
+forEach()
+```
+
+La méthode `forEach()` sait comment utiliser ce comportement grâce à une **Functional Interface**.
+
+---
+
+# 10. Lambda vs méthode classique
+
+### Méthode classique
+
+```java
+public static int doubleNumber(int x) {
+    return x * 2;
+}
+```
+
+### Lambda
+
+```java
+x -> x * 2
+```
+
+La Lambda permet donc d'exprimer le même comportement de manière plus concise lorsqu'elle est utilisée dans un contexte approprié.
+
+---
+
+# 11. Points importants
+
+Une Lambda :
+
+```java
+x -> x * 2
+```
+
+ne représente pas simplement une méthode indépendante.
+
+Elle est utilisée dans un contexte où Java sait **quel type de comportement est attendu**, généralement grâce à une Functional Interface.
+
+Exemple :
+
+```java
+Calculator calc = x -> x * 2;
+```
+
+Ici :
+
+```text
+Calculator
+     ↓
+Functional Interface
+     ↓
+int calculate(int x)
+     ↓
+x -> x * 2
+```
+
+---
+
+# 12. À retenir
+
+```text
+Lambda
+  ↓
+Manière courte d'écrire un comportement
+
+Functional Interface
+  ↓
+Interface avec une seule méthode abstraite
+
+Lambda + Functional Interface
+  ↓
+Permet de fournir le comportement attendu
+```
+
+Les points essentiels à retenir :
+
+* Une Lambda permet d'écrire un comportement de manière concise.
+* Les Lambda Expressions ont été introduites avec **Java 8**.
+* La syntaxe principale est :
+
+```java
+(parameters) -> expression
+```
+
+* Une Lambda est généralement utilisée avec une **Functional Interface**.
+* Une Functional Interface possède une seule méthode abstraite.
+* `@FunctionalInterface` permet au compilateur de vérifier cette règle.
+* Les interfaces fonctionnelles importantes sont `Predicate`, `Function`, `Consumer` et `Supplier`.
+* Les Lambdas sont très utilisées avec les **Collections** et les **Streams**.
+* Elles sont notamment utilisées avec `forEach()`, `removeIf()` et `sort()`.
+
+
+# 2 - Les différentes versions du JDK en Java
 
 ## Introduction
 
@@ -659,4 +971,858 @@ Java 25 → Nouvelle LTS
 ```
 
 Pour apprendre le Java moderne, **JDK 21 est un excellent choix**.
+
+# 3 - Les structures de données en Java
+
+## Introduction
+
+En Java, les structures de données permettent de **stocker et organiser plusieurs données** dans un programme.
+
+Les principales structures à connaître sont :
+
+* `Array`
+* `List`
+* `Set`
+* `Map`
+* `Queue`
+
+Elles ne servent pas toutes au même objectif.
+
+Le choix dépend principalement de :
+
+* Est-ce que l'ordre est important ?
+* Est-ce que les doublons sont autorisés ?
+* Est-ce qu'on veut accéder aux éléments par leur position ?
+* Est-ce qu'on veut accéder à une valeur à partir d'une clé ?
+* Est-ce qu'on a besoin de performances particulières ?
+
+---
+
+# 1. Array (Tableau)
+
+Un `Array` permet de stocker plusieurs éléments du **même type**.
+
+Sa taille est **fixe** après sa création.
+
+## Exemple
+
+```java
+int[] numbers = {10, 20, 30, 40};
+```
+
+On peut accéder à un élément grâce à son index :
+
+```java
+System.out.println(numbers[0]);
+```
+
+Résultat :
+
+```text
+10
+```
+
+Les index commencent à `0`.
+
+```text
+Index :   0    1    2    3
+          ↓    ↓    ↓    ↓
+Value :  10   20   30   40
+```
+
+## Modifier un élément
+
+```java
+numbers[1] = 50;
+```
+
+Le tableau devient :
+
+```text
+10 50 30 40
+```
+
+## Taille
+
+La taille est fixe :
+
+```java
+int[] numbers = new int[5];
+```
+
+Ce tableau peut contenir exactement **5 éléments**.
+
+On ne peut pas simplement faire :
+
+```java
+numbers.add(60); // ❌
+```
+
+Les Arrays n'ont pas de méthode `add()`.
+
+---
+
+## Quand utiliser un Array ?
+
+Utilise un `Array` lorsque :
+
+* tu connais la taille à l'avance ;
+* la taille ne doit pas changer ;
+* tu veux une structure simple et rapide ;
+* tu travailles avec des données simples.
+
+Exemple :
+
+```java
+String[] days = {
+    "Monday",
+    "Tuesday",
+    "Wednesday"
+};
+```
+
+---
+
+# 2. List
+
+Une `List` est une collection **ordonnée** qui permet généralement les **doublons**.
+
+Contrairement à un Array, une `List` peut changer de taille.
+
+Exemple :
+
+```java
+List<String> names = new ArrayList<>();
+
+names.add("Ali");
+names.add("Sara");
+names.add("Omar");
+```
+
+On peut ajouter des éléments :
+
+```java
+names.add("Yassine");
+```
+
+Supprimer :
+
+```java
+names.remove("Ali");
+```
+
+Accéder à un élément avec son index :
+
+```java
+System.out.println(names.get(0));
+```
+
+---
+
+# 3. ArrayList
+
+`ArrayList` est l'implémentation de `List` la plus utilisée.
+
+```java
+List<String> names = new ArrayList<>();
+```
+
+Elle conserve l'ordre d'insertion.
+
+Exemple :
+
+```java
+names.add("Ali");
+names.add("Sara");
+names.add("Omar");
+```
+
+Résultat :
+
+```text
+Ali
+Sara
+Omar
+```
+
+Les doublons sont autorisés :
+
+```java
+names.add("Ali");
+```
+
+Résultat :
+
+```text
+Ali
+Sara
+Omar
+Ali
+```
+
+---
+
+## Quand utiliser ArrayList ?
+
+Utilise `ArrayList` lorsque :
+
+* l'ordre est important ;
+* tu veux accéder aux éléments par index ;
+* tu peux avoir des doublons ;
+* tu veux une collection dont la taille peut évoluer.
+
+Dans la majorité des cas, si tu as simplement besoin d'une liste, `ArrayList` est un excellent choix.
+
+---
+
+# 4. LinkedList
+
+`LinkedList` est une autre implémentation de `List`.
+
+```java
+List<String> names = new LinkedList<>();
+```
+
+Elle fonctionne différemment d'une `ArrayList` au niveau interne.
+
+Elle peut être intéressante lorsqu'on effectue beaucoup d'ajouts ou de suppressions à certains endroits de la liste.
+
+Cependant, pour beaucoup de cas classiques, `ArrayList` reste le choix par défaut.
+
+---
+
+# 5. Set
+
+Un `Set` représente une collection qui **n'autorise pas les doublons**.
+
+Exemple :
+
+```java
+Set<String> names = new HashSet<>();
+
+names.add("Ali");
+names.add("Sara");
+names.add("Ali");
+```
+
+Même si `"Ali"` est ajouté deux fois, le Set ne conservera qu'une seule occurrence.
+
+```text
+Ali
+Sara
+```
+
+---
+
+## HashSet
+
+`HashSet` est l'implémentation la plus courante de `Set`.
+
+```java
+Set<String> names = new HashSet<>();
+```
+
+Il est particulièrement adapté lorsque l'objectif principal est :
+
+> Vérifier si une valeur existe et éviter les doublons.
+
+Exemple :
+
+```java
+Set<Integer> numbers = new HashSet<>();
+
+numbers.add(10);
+numbers.add(20);
+numbers.add(10);
+numbers.add(30);
+```
+
+Résultat conceptuel :
+
+```text
+10
+20
+30
+```
+
+---
+
+## LinkedHashSet
+
+`LinkedHashSet` conserve l'ordre d'insertion.
+
+```java
+Set<String> names = new LinkedHashSet<>();
+
+names.add("Ali");
+names.add("Sara");
+names.add("Omar");
+```
+
+L'ordre sera conservé :
+
+```text
+Ali
+Sara
+Omar
+```
+
+---
+
+## TreeSet
+
+`TreeSet` maintient les éléments dans un ordre trié.
+
+```java
+Set<Integer> numbers = new TreeSet<>();
+
+numbers.add(30);
+numbers.add(10);
+numbers.add(20);
+```
+
+Résultat :
+
+```text
+10
+20
+30
+```
+
+---
+
+# 6. Map
+
+Une `Map` fonctionne différemment de `List` et `Set`.
+
+Elle stocke des données sous forme :
+
+```text
+KEY → VALUE
+```
+
+Par exemple :
+
+```text
+"username" → "Zakaria"
+"age"      → 24
+```
+
+Exemple Java :
+
+```java
+Map<String, String> users = new HashMap<>();
+
+users.put("user1", "Ali");
+users.put("user2", "Sara");
+users.put("user3", "Omar");
+```
+
+Pour récupérer une valeur :
+
+```java
+System.out.println(users.get("user1"));
+```
+
+Résultat :
+
+```text
+Ali
+```
+
+---
+
+# 7. HashMap
+
+`HashMap` est l'implémentation de `Map` la plus utilisée.
+
+```java
+Map<String, Integer> ages = new HashMap<>();
+
+ages.put("Ali", 20);
+ages.put("Sara", 25);
+ages.put("Omar", 22);
+```
+
+On peut récupérer l'âge :
+
+```java
+System.out.println(ages.get("Sara"));
+```
+
+Résultat :
+
+```text
+25
+```
+
+---
+
+## Les clés sont uniques
+
+Une `Map` ne peut pas avoir deux fois la même clé.
+
+```java
+Map<String, Integer> ages = new HashMap<>();
+
+ages.put("Ali", 20);
+ages.put("Ali", 25);
+```
+
+La deuxième valeur remplace la première.
+
+Résultat :
+
+```text
+Ali → 25
+```
+
+---
+
+# 8. LinkedHashMap
+
+`LinkedHashMap` conserve l'ordre d'insertion des clés.
+
+```java
+Map<String, Integer> ages = new LinkedHashMap<>();
+
+ages.put("Ali", 20);
+ages.put("Sara", 25);
+ages.put("Omar", 22);
+```
+
+L'ordre est conservé :
+
+```text
+Ali
+Sara
+Omar
+```
+
+---
+
+# 9. TreeMap
+
+`TreeMap` trie les clés.
+
+```java
+Map<String, Integer> ages = new TreeMap<>();
+
+ages.put("Omar", 22);
+ages.put("Ali", 20);
+ages.put("Sara", 25);
+```
+
+Les clés seront triées :
+
+```text
+Ali
+Omar
+Sara
+```
+
+---
+
+# 10. Queue
+
+Une `Queue` représente généralement une file d'attente.
+
+Le principe classique est :
+
+```text
+First In → First Out
+```
+
+ou **FIFO**.
+
+Le premier élément ajouté est généralement le premier à sortir.
+
+Exemple :
+
+```java
+Queue<String> queue = new LinkedList<>();
+
+queue.add("Ali");
+queue.add("Sara");
+queue.add("Omar");
+```
+
+La file ressemble à :
+
+```text
+Ali → Sara → Omar
+```
+
+Si on retire un élément :
+
+```java
+queue.poll();
+```
+
+`Ali` est retiré.
+
+Il reste :
+
+```text
+Sara → Omar
+```
+
+---
+
+# 11. Stack
+
+Une Stack fonctionne généralement selon le principe :
+
+```text
+Last In → First Out
+```
+
+ou **LIFO**.
+
+Le dernier élément ajouté est le premier à sortir.
+
+Conceptuellement :
+
+```text
+       Omar ← dernier ajouté
+       Sara
+       Ali  ← premier ajouté
+```
+
+En Java moderne, `Deque` est généralement préférable à l'ancienne classe `Stack`.
+
+Exemple :
+
+```java
+Deque<String> stack = new ArrayDeque<>();
+
+stack.push("Ali");
+stack.push("Sara");
+stack.push("Omar");
+```
+
+Puis :
+
+```java
+stack.pop();
+```
+
+retire :
+
+```text
+Omar
+```
+
+---
+
+# 12. Comparaison des principales structures
+
+| Structure     | Ordre             | Doublons    | Accès par index | Clé → valeur | Taille    |
+| ------------- | ----------------- | ----------- | --------------- | ------------ | --------- |
+| Array         | ✅                 | ✅           | ✅               | ❌            | Fixe      |
+| ArrayList     | ✅                 | ✅           | ✅               | ❌            | Dynamique |
+| LinkedList    | ✅                 | ✅           | ✅               | ❌            | Dynamique |
+| HashSet       | ❌ garanti         | ❌           | ❌               | ❌            | Dynamique |
+| LinkedHashSet | ✅                 | ❌           | ❌               | ❌            | Dynamique |
+| TreeSet       | Trié              | ❌           | ❌               | ❌            | Dynamique |
+| HashMap       | ❌ garanti         | Valeurs : ✅ | ❌               | ✅            | Dynamique |
+| LinkedHashMap | ✅                 | Valeurs : ✅ | ❌               | ✅            | Dynamique |
+| TreeMap       | Trié par clé      | Valeurs : ✅ | ❌               | ✅            | Dynamique |
+| Queue         | Généralement FIFO | ✅           | ❌               | ❌            | Dynamique |
+
+---
+
+# 13. Comment choisir ?
+
+La question la plus importante est :
+
+> **De quelle manière vais-je accéder à mes données ?**
+
+## Cas 1 : J'ai besoin d'une simple liste
+
+```java
+List<String> names = new ArrayList<>();
+```
+
+Utilise généralement :
+
+**ArrayList**
+
+---
+
+## Cas 2 : Je ne veux aucun doublon
+
+```java
+Set<String> names = new HashSet<>();
+```
+
+Utilise :
+
+**Set / HashSet**
+
+---
+
+## Cas 3 : J'ai besoin de clé → valeur
+
+```java
+Map<String, Integer> ages = new HashMap<>();
+```
+
+Utilise :
+
+**Map / HashMap**
+
+---
+
+## Cas 4 : Je veux conserver l'ordre d'insertion sans doublons
+
+```java
+Set<String> names = new LinkedHashSet<>();
+```
+
+Utilise :
+
+**LinkedHashSet**
+
+---
+
+## Cas 5 : Je veux que les éléments soient triés
+
+```java
+Set<Integer> numbers = new TreeSet<>();
+```
+
+ou :
+
+```java
+Map<String, Integer> users = new TreeMap<>();
+```
+
+Utilise :
+
+**TreeSet / TreeMap**
+
+---
+
+## Cas 6 : Je connais la taille à l'avance
+
+```java
+int[] numbers = new int[5];
+```
+
+Utilise :
+
+**Array**
+
+---
+
+## Cas 7 : Je veux une file d'attente
+
+```java
+Queue<String> queue = new LinkedList<>();
+```
+
+Utilise :
+
+**Queue**
+
+---
+
+# 14. Exemple concret
+
+Imaginons une application de gestion d'utilisateurs.
+
+### Liste des utilisateurs
+
+```java
+List<String> users = new ArrayList<>();
+
+users.add("Ali");
+users.add("Sara");
+users.add("Omar");
+```
+
+Pourquoi `List` ?
+
+Parce que l'ordre peut être important et les doublons sont éventuellement autorisés.
+
+---
+
+### Emails uniques
+
+```java
+Set<String> emails = new HashSet<>();
+
+emails.add("ali@gmail.com");
+emails.add("sara@gmail.com");
+emails.add("ali@gmail.com");
+```
+
+Pourquoi `Set` ?
+
+Parce qu'un email doit être unique.
+
+---
+
+### Utilisateur → âge
+
+```java
+Map<String, Integer> ages = new HashMap<>();
+
+ages.put("Ali", 20);
+ages.put("Sara", 25);
+```
+
+Pourquoi `Map` ?
+
+Parce qu'on veut associer une **clé** à une **valeur**.
+
+---
+
+# 15. Interface vs implémentation
+
+Un concept très important en Java est de distinguer :
+
+```java
+List<String> names = new ArrayList<>();
+```
+
+Ici :
+
+```text
+List       → interface
+ArrayList  → implémentation
+```
+
+Même chose :
+
+```java
+Set<String> names = new HashSet<>();
+```
+
+```text
+Set       → interface
+HashSet   → implémentation
+```
+
+Et :
+
+```java
+Map<String, Integer> ages = new HashMap<>();
+```
+
+```text
+Map       → interface
+HashMap   → implémentation
+```
+
+Cette façon d'écrire le code est généralement recommandée :
+
+```java
+List<String> names = new ArrayList<>();
+```
+
+plutôt que :
+
+```java
+ArrayList<String> names = new ArrayList<>();
+```
+
+Cela permet de changer plus facilement l'implémentation si nécessaire.
+
+---
+
+# 16. Résumé rapide
+
+```text
+Array
+  ↓
+Taille fixe + accès par index
+
+List
+  ↓
+Liste ordonnée + doublons autorisés
+
+Set
+  ↓
+Pas de doublons
+
+Map
+  ↓
+Clé → Valeur
+
+Queue
+  ↓
+File d'attente (FIFO)
+
+Deque
+  ↓
+File dans les deux directions + comportement Stack possible
+```
+
+---
+
+# 17. Le plus important à retenir
+
+```text
+J'ai besoin d'une liste ?
+        ↓
+      List
+        ↓
+   ArrayList
+
+J'ai besoin d'éviter les doublons ?
+        ↓
+      Set
+        ↓
+    HashSet
+
+J'ai besoin de clé → valeur ?
+        ↓
+      Map
+        ↓
+    HashMap
+
+J'ai besoin d'une taille fixe ?
+        ↓
+      Array
+
+J'ai besoin d'une file d'attente ?
+        ↓
+      Queue
+
+J'ai besoin d'un ordre trié ?
+        ↓
+   TreeSet / TreeMap
+```
+
+## Conclusion
+
+Il n'existe pas une structure de données qui soit toujours meilleure que les autres.
+
+Le choix dépend du problème à résoudre.
+
+Les quatre structures essentielles à maîtriser en premier sont :
+
+```text
+Array
+List
+Set
+Map
+```
+
+Puis il faut apprendre leurs implémentations principales :
+
+```text
+ArrayList
+HashSet
+LinkedHashSet
+TreeSet
+HashMap
+LinkedHashMap
+TreeMap
+```
+
+Une bonne connaissance de ces structures est indispensable pour travailler efficacement avec les collections Java, les Streams, les APIs REST et les frameworks comme Spring Boot.
+
 
