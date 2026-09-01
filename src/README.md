@@ -1826,3 +1826,999 @@ TreeMap
 Une bonne connaissance de ces structures est indispensable pour travailler efficacement avec les collections Java, les Streams, les APIs REST et les frameworks comme Spring Boot.
 
 
+# 4 - Java — Programmation fonctionnelle
+
+## Documentation + Exercices pratiques
+
+**Objectif :** comprendre les grands principes de la programmation fonctionnelle en Java, le rôle des interfaces fonctionnelles, des Lambda Expressions et des Streams, puis pratiquer sans regarder les solutions.
+
+---
+
+# 1. C'est quoi la programmation fonctionnelle ?
+
+La programmation fonctionnelle est une manière de programmer qui consiste notamment à **manipuler des fonctions et des comportements comme des données**.
+
+En Java, elle permet d'écrire du code plus déclaratif, notamment grâce aux :
+
+* Lambda Expressions
+* Functional Interfaces
+* Streams
+* Method References
+
+Java n'est pas un langage purement fonctionnel. C'est un langage principalement orienté objet qui intègre des fonctionnalités de programmation fonctionnelle.
+
+---
+
+# 2. Les grands principes
+
+La programmation fonctionnelle repose sur plusieurs idées importantes.
+
+## Fonction comme comportement
+
+On peut représenter un comportement et le transmettre à une méthode.
+
+Exemple :
+
+```java
+x -> x * 2
+```
+
+Cette Lambda représente une règle :
+
+> prendre `x` et retourner `x * 2`.
+
+---
+
+## Éviter les modifications inutiles
+
+La programmation fonctionnelle privilégie généralement la création de résultats plutôt que la modification directe des données existantes.
+
+Exemple :
+
+```java
+List<Integer> numbers = List.of(1, 2, 3, 4, 5);
+
+List<Integer> doubled = numbers.stream()
+        .map(n -> n * 2)
+        .toList();
+```
+
+La liste originale `numbers` n'est pas modifiée.
+
+Une nouvelle liste est créée :
+
+```text
+numbers
+1 2 3 4 5
+
+        ↓ map
+
+doubled
+2 4 6 8 10
+```
+
+---
+
+# 3. Lambda Expressions
+
+Les Lambda Expressions permettent d'écrire un comportement de manière concise.
+
+Exemple :
+
+```java
+x -> x * 2
+```
+
+Avec une Functional Interface :
+
+```java
+@FunctionalInterface
+interface Calculator {
+    int calculate(int x);
+}
+```
+
+On peut écrire :
+
+```java
+Calculator calc = x -> x * 2;
+```
+
+Puis :
+
+```java
+System.out.println(calc.calculate(5));
+```
+
+Résultat :
+
+```text
+10
+```
+
+Les Lambdas sont donc un élément important de la programmation fonctionnelle en Java.
+
+---
+
+# 4. Functional Interfaces
+
+Une Functional Interface est une interface qui possède **une seule méthode abstraite**.
+
+Exemple :
+
+```java
+@FunctionalInterface
+interface Calculator {
+    int calculate(int x);
+}
+```
+
+Une Lambda peut ensuite être utilisée pour fournir l'implémentation :
+
+```java
+Calculator calc = x -> x * 2;
+```
+
+---
+
+# 5. Les principales interfaces fonctionnelles
+
+Java fournit plusieurs interfaces fonctionnelles dans le package `java.util.function`.
+
+## Predicate<T>
+
+`Predicate` reçoit une valeur et retourne un `boolean`.
+
+Forme :
+
+```text
+T → boolean
+```
+
+Exemple :
+
+```java
+Predicate<Integer> isEven = n -> n % 2 == 0;
+```
+
+Utilisation :
+
+```java
+System.out.println(isEven.test(4));
+```
+
+Résultat :
+
+```text
+true
+```
+
+---
+
+## Function<T, R>
+
+`Function` reçoit une valeur et retourne une autre valeur.
+
+Forme :
+
+```text
+T → R
+```
+
+Exemple :
+
+```java
+Function<String, Integer> length = s -> s.length();
+```
+
+Utilisation :
+
+```java
+System.out.println(length.apply("Java"));
+```
+
+Résultat :
+
+```text
+4
+```
+
+---
+
+## Consumer<T>
+
+`Consumer` reçoit une valeur mais ne retourne rien.
+
+Forme :
+
+```text
+T → void
+```
+
+Exemple :
+
+```java
+Consumer<String> print = s -> System.out.println(s);
+```
+
+Utilisation :
+
+```java
+print.accept("Hello");
+```
+
+---
+
+## Supplier<T>
+
+`Supplier` ne reçoit aucun paramètre et retourne une valeur.
+
+Forme :
+
+```text
+() → T
+```
+
+Exemple :
+
+```java
+Supplier<Double> random = () -> Math.random();
+```
+
+Utilisation :
+
+```java
+System.out.println(random.get());
+```
+
+---
+
+# 6. C'est quoi un Stream ?
+
+Un `Stream` permet de traiter les éléments d'une collection **sous forme d'un flux de données**.
+
+Il permet notamment de :
+
+* filtrer des éléments ;
+* transformer des éléments ;
+* trier ;
+* rechercher ;
+* calculer ;
+* collecter les résultats.
+
+Exemple :
+
+```java
+List<Integer> numbers =
+        List.of(1, 2, 3, 4, 5);
+```
+
+On peut créer un Stream :
+
+```java
+numbers.stream();
+```
+
+Le Stream permet ensuite d'appliquer différentes opérations.
+
+---
+
+# 7. Pipeline d'un Stream
+
+Un Stream fonctionne généralement comme un pipeline :
+
+```text
+Source
+  ↓
+Opération intermédiaire
+  ↓
+Opération intermédiaire
+  ↓
+Opération terminale
+```
+
+Exemple :
+
+```java
+numbers.stream()
+       .filter(n -> n % 2 == 0)
+       .map(n -> n * 2)
+       .toList();
+```
+
+On peut le comprendre comme :
+
+```text
+Liste
+ ↓
+stream()
+ ↓
+filter()
+ ↓
+map()
+ ↓
+toList()
+ ↓
+Résultat
+```
+
+---
+
+# 8. filter()
+
+`filter()` permet de garder uniquement les éléments qui respectent une condition.
+
+Exemple :
+
+```java
+List<Integer> numbers =
+        List.of(1, 2, 3, 4, 5);
+```
+
+On veut garder uniquement les nombres pairs :
+
+```java
+List<Integer> evenNumbers = numbers.stream()
+        .filter(n -> n % 2 == 0)
+        .toList();
+```
+
+Résultat :
+
+```text
+2
+4
+```
+
+La Lambda :
+
+```java
+n -> n % 2 == 0
+```
+
+est une condition.
+
+Elle correspond au fonctionnement d'un `Predicate`.
+
+---
+
+# 9. map()
+
+`map()` permet de **transformer chaque élément**.
+
+Exemple :
+
+```java
+List<Integer> numbers =
+        List.of(1, 2, 3, 4, 5);
+```
+
+Multiplier chaque nombre par 2 :
+
+```java
+List<Integer> doubled = numbers.stream()
+        .map(n -> n * 2)
+        .toList();
+```
+
+Résultat :
+
+```text
+2
+4
+6
+8
+10
+```
+
+Ici :
+
+```java
+n -> n * 2
+```
+
+transforme un `Integer` en un autre `Integer`.
+
+Cela correspond au fonctionnement d'une `Function`.
+
+---
+
+# 10. filter() + map()
+
+On peut combiner plusieurs opérations.
+
+Exemple :
+
+```java
+List<Integer> numbers =
+        List.of(1, 2, 3, 4, 5, 6);
+```
+
+Objectif :
+
+> garder les nombres pairs puis les multiplier par 10.
+
+```java
+List<Integer> result = numbers.stream()
+        .filter(n -> n % 2 == 0)
+        .map(n -> n * 10)
+        .toList();
+```
+
+Résultat :
+
+```text
+20
+40
+60
+```
+
+On peut visualiser :
+
+```text
+1  2  3  4  5  6
+      ↓
+filter()
+      ↓
+2  4  6
+      ↓
+map()
+      ↓
+20  40  60
+```
+
+---
+
+# 11. forEach()
+
+`forEach()` permet d'exécuter une action pour chaque élément.
+
+Exemple :
+
+```java
+List<String> names =
+        List.of("Ali", "Sara", "Omar");
+
+names.stream()
+     .forEach(name -> System.out.println(name));
+```
+
+Résultat :
+
+```text
+Ali
+Sara
+Omar
+```
+
+La Lambda :
+
+```java
+name -> System.out.println(name)
+```
+
+correspond au fonctionnement d'un `Consumer`.
+
+---
+
+# 12. sorted()
+
+`sorted()` permet de trier les éléments.
+
+Exemple :
+
+```java
+List<Integer> numbers =
+        List.of(5, 2, 8, 1, 3);
+```
+
+```java
+List<Integer> sorted = numbers.stream()
+        .sorted()
+        .toList();
+```
+
+Résultat :
+
+```text
+1
+2
+3
+5
+8
+```
+
+---
+
+# 13. collect() et toList()
+
+Après avoir traité les éléments d'un Stream, on veut souvent récupérer le résultat dans une collection.
+
+Avec Java moderne :
+
+```java
+List<Integer> result = numbers.stream()
+        .filter(n -> n > 2)
+        .toList();
+```
+
+On peut également utiliser `collect()` :
+
+```java
+List<Integer> result = numbers.stream()
+        .filter(n -> n > 2)
+        .collect(Collectors.toList());
+```
+
+`toList()` est une manière plus simple de récupérer le résultat sous forme de liste.
+
+---
+
+# 14. count()
+
+`count()` permet de compter le nombre d'éléments.
+
+Exemple :
+
+```java
+List<Integer> numbers =
+        List.of(1, 2, 3, 4, 5);
+```
+
+```java
+long count = numbers.stream()
+        .filter(n -> n % 2 == 0)
+        .count();
+```
+
+Résultat :
+
+```text
+2
+```
+
+Il y a deux nombres pairs :
+
+```text
+2
+4
+```
+
+---
+
+# 15. reduce()
+
+`reduce()` permet de combiner plusieurs éléments pour obtenir une seule valeur.
+
+Exemple :
+
+```java
+List<Integer> numbers =
+        List.of(1, 2, 3, 4, 5);
+```
+
+Calculer la somme :
+
+```java
+int sum = numbers.stream()
+        .reduce(0, (a, b) -> a + b);
+```
+
+Résultat :
+
+```text
+15
+```
+
+On peut visualiser :
+
+```text
+1 + 2 + 3 + 4 + 5
+        ↓
+       15
+```
+
+---
+
+# 16. Method References
+
+Une Method Reference permet d'utiliser une méthode existante au lieu d'écrire une Lambda.
+
+Exemple avec `forEach()` :
+
+```java
+List<String> names =
+        List.of("Ali", "Sara", "Omar");
+
+names.forEach(name -> System.out.println(name));
+```
+
+On peut écrire :
+
+```java
+names.forEach(System.out::println);
+```
+
+Les deux formes réalisent la même action.
+
+---
+
+# 17. Stream vs Collection
+
+Il est important de comprendre que `Stream` et `Collection` ne sont pas la même chose.
+
+Une `Collection` sert principalement à **stocker les données**.
+
+Exemple :
+
+```java
+List<Integer> numbers =
+        List.of(1, 2, 3, 4, 5);
+```
+
+Un `Stream` sert principalement à **traiter les données**.
+
+```java
+numbers.stream()
+       .filter(n -> n > 2)
+       .map(n -> n * 2)
+       .toList();
+```
+
+On peut donc retenir :
+
+```text
+Collection
+    ↓
+Stocker les données
+
+Stream
+    ↓
+Traiter les données
+```
+
+---
+
+# 18. Stream ne modifie généralement pas la Collection source
+
+Exemple :
+
+```java
+List<Integer> numbers =
+        List.of(1, 2, 3, 4, 5);
+
+List<Integer> result = numbers.stream()
+        .filter(n -> n > 2)
+        .toList();
+```
+
+La collection originale reste :
+
+```text
+1 2 3 4 5
+```
+
+Le résultat est :
+
+```text
+3 4 5
+```
+
+Le Stream permet donc de construire un nouveau résultat sans modifier directement la collection source dans cet exemple.
+
+---
+
+# 19. Les opérations intermédiaires et terminales
+
+Les opérations de Stream sont généralement divisées en deux catégories.
+
+## Opérations intermédiaires
+
+Elles transforment ou filtrent le Stream et retournent généralement un nouveau Stream.
+
+Exemples :
+
+```text
+filter()
+map()
+sorted()
+distinct()
+limit()
+```
+
+Exemple :
+
+```java
+numbers.stream()
+       .filter(n -> n > 2)
+       .map(n -> n * 2);
+```
+
+---
+
+## Opérations terminales
+
+Elles terminent le traitement du Stream et produisent généralement un résultat ou un effet.
+
+Exemples :
+
+```text
+forEach()
+toList()
+collect()
+count()
+reduce()
+```
+
+Exemple :
+
+```java
+numbers.stream()
+       .filter(n -> n > 2)
+       .count();
+```
+
+---
+
+# 20. Exemple complet
+
+Supposons une liste de prix :
+
+```java
+List<Double> prices =
+        List.of(10.0, 25.0, 5.0, 40.0, 15.0);
+```
+
+Objectif :
+
+> garder les prix supérieurs ou égaux à 15 €, appliquer une réduction de 10 %, puis récupérer les résultats.
+
+```java
+List<Double> result = prices.stream()
+        .filter(price -> price >= 15)
+        .map(price -> price * 0.9)
+        .toList();
+```
+
+Résultat :
+
+```text
+22.5
+36.0
+13.5
+```
+
+On peut comprendre le pipeline :
+
+```text
+10.0  25.0  5.0  40.0  15.0
+             ↓
+          filter()
+             ↓
+      25.0  40.0  15.0
+             ↓
+           map()
+             ↓
+      22.5  36.0  13.5
+             ↓
+          toList()
+```
+
+---
+
+# 21. Pourquoi utiliser la programmation fonctionnelle ?
+
+Elle permet notamment de :
+
+* écrire un code plus concis ;
+* séparer les données du traitement ;
+* éviter certaines modifications directes des données ;
+* rendre certains traitements de collections plus lisibles ;
+* manipuler facilement des données avec les Streams ;
+* utiliser des comportements réutilisables grâce aux Functional Interfaces.
+
+Cependant, il ne faut pas utiliser les Streams et les Lambdas partout.
+
+Pour un traitement simple, une boucle classique peut parfois être plus claire.
+
+---
+
+# 22. Programmation impérative vs fonctionnelle
+
+## Approche impérative
+
+On décrit principalement **comment** effectuer le traitement.
+
+Exemple :
+
+```java
+List<Integer> numbers =
+        List.of(1, 2, 3, 4, 5);
+
+List<Integer> result = new ArrayList<>();
+
+for (Integer number : numbers) {
+    if (number % 2 == 0) {
+        result.add(number * 2);
+    }
+}
+```
+
+---
+
+## Approche fonctionnelle
+
+On décrit davantage **ce qu'on veut obtenir**.
+
+```java
+List<Integer> result = numbers.stream()
+        .filter(n -> n % 2 == 0)
+        .map(n -> n * 2)
+        .toList();
+```
+
+Les deux approches peuvent produire le même résultat.
+
+---
+
+# 23. Les méthodes importantes à connaître
+
+Pour les Streams, commence par maîtriser :
+
+```text
+stream()
+    ↓
+filter()
+    ↓
+map()
+    ↓
+sorted()
+    ↓
+distinct()
+    ↓
+forEach()
+    ↓
+toList()
+    ↓
+collect()
+    ↓
+count()
+    ↓
+reduce()
+```
+
+Tu n'as pas besoin de mémoriser toutes les méthodes immédiatement.
+
+Commence surtout par :
+
+```text
+filter()
+map()
+forEach()
+toList()
+```
+
+Puis ajoute progressivement :
+
+```text
+sorted()
+distinct()
+count()
+reduce()
+collect()
+```
+
+---
+
+# 24. Relation entre Lambda, Functional Interface et Stream
+
+Ces trois concepts sont fortement liés.
+
+```text
+Lambda
+   ↓
+Fournit un comportement
+   ↓
+Functional Interface
+   ↓
+Permet de définir le type du comportement
+   ↓
+Stream
+   ↓
+Utilise ces comportements pour traiter les données
+```
+
+Exemple :
+
+```java
+numbers.stream()
+       .filter(n -> n % 2 == 0)
+       .map(n -> n * 2)
+       .forEach(System.out::println);
+```
+
+Ici :
+
+```text
+filter()
+   ↓
+Predicate
+
+map()
+   ↓
+Function
+
+forEach()
+   ↓
+Consumer
+```
+
+C'est l'un des concepts les plus importants à comprendre.
+
+---
+
+# 25. À retenir
+
+```text
+Programmation fonctionnelle
+        ↓
+Manipuler des comportements et transformer des données
+
+Lambda
+        ↓
+Écrire un comportement de manière concise
+
+Functional Interface
+        ↓
+Définit la forme du comportement
+
+Stream
+        ↓
+Traiter les données d'une collection
+```
+
+Les interfaces fonctionnelles principales sont :
+
+```text
+Predicate
+    ↓
+T → boolean
+
+Function
+    ↓
+T → R
+
+Consumer
+    ↓
+T → void
+
+Supplier
+    ↓
+() → T
+```
+
+Les méthodes Stream les plus importantes :
+
+```text
+filter()   → filtrer
+map()      → transformer
+sorted()   → trier
+forEach()  → effectuer une action
+toList()   → récupérer une liste
+count()    → compter
+reduce()   → combiner les valeurs
+```
+
+Enfin :
+
+```text
+Collection
+    ↓
+Stocker les données
+
+Stream
+    ↓
+Traiter les données
+```
+
+La programmation fonctionnelle en Java repose donc principalement sur l'utilisation des **Lambda Expressions**, des **Functional Interfaces** et des **Streams** pour écrire des traitements de données plus déclaratifs et souvent plus concis.
