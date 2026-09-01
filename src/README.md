@@ -2822,3 +2822,1035 @@ Traiter les données
 ```
 
 La programmation fonctionnelle en Java repose donc principalement sur l'utilisation des **Lambda Expressions**, des **Functional Interfaces** et des **Streams** pour écrire des traitements de données plus déclaratifs et souvent plus concis.
+
+
+# 5 - Java — Types abstraits
+
+## Documentation + Exercices pratiques
+
+**Objectif :** comprendre l'abstraction en POO, savoir utiliser les classes abstraites et les interfaces, comprendre leurs différences et savoir quand utiliser chacune.
+
+---
+
+# 1. C'est quoi l'abstraction ?
+
+L'**abstraction** est un principe de la programmation orientée objet qui consiste à **cacher les détails d'implémentation** et à exposer uniquement ce qui est nécessaire.
+
+L'idée est de se concentrer sur :
+
+> **Ce que l'objet fait** plutôt que **comment il le fait**.
+
+Exemple :
+
+Quand on utilise une voiture :
+
+```text
+start()
+accelerate()
+brake()
+```
+
+On utilise ces comportements sans avoir besoin de connaître tous les détails internes du moteur.
+
+En POO, l'abstraction permet de créer des modèles qui définissent les comportements que les classes doivent fournir.
+
+---
+
+# 2. Pourquoi utiliser l'abstraction ?
+
+L'abstraction permet notamment de :
+
+* réduire la complexité du code ;
+* cacher les détails d'implémentation ;
+* définir un comportement commun ;
+* obliger certaines classes à implémenter certaines méthodes ;
+* faciliter la maintenance du code ;
+* améliorer la conception orientée objet.
+
+---
+
+# 3. Classe abstraite
+
+Une **classe abstraite** est une classe qui ne peut pas être instanciée directement.
+
+On utilise le mot-clé :
+
+```java
+abstract
+```
+
+Exemple :
+
+```java
+abstract class Animal {
+
+}
+```
+
+On ne peut pas faire :
+
+```java
+Animal animal = new Animal(); // ❌
+```
+
+Une classe abstraite sert généralement de **base pour d'autres classes**.
+
+---
+
+# 4. Méthode abstraite
+
+Une classe abstraite peut contenir une **méthode abstraite**.
+
+Une méthode abstraite est une méthode qui possède une déclaration mais **pas d'implémentation**.
+
+Exemple :
+
+```java
+abstract class Animal {
+
+    abstract void makeSound();
+}
+```
+
+Ici :
+
+```java
+abstract void makeSound();
+```
+
+indique que les classes filles devront définir cette méthode.
+
+---
+
+# 5. Hériter d'une classe abstraite
+
+Une classe peut hériter d'une classe abstraite avec :
+
+```java
+extends
+```
+
+Exemple :
+
+```java
+abstract class Animal {
+
+    abstract void makeSound();
+}
+```
+
+Puis :
+
+```java
+class Dog extends Animal {
+
+    @Override
+    void makeSound() {
+        System.out.println("Woof");
+    }
+}
+```
+
+On peut maintenant créer un `Dog` :
+
+```java
+Dog dog = new Dog();
+
+dog.makeSound();
+```
+
+Résultat :
+
+```text
+Woof
+```
+
+---
+
+# 6. Une classe abstraite peut avoir des méthodes normales
+
+Une classe abstraite n'est pas obligée de contenir uniquement des méthodes abstraites.
+
+Elle peut avoir :
+
+* des méthodes abstraites ;
+* des méthodes normales ;
+* des attributs ;
+* un constructeur.
+
+Exemple :
+
+```java
+abstract class Animal {
+
+    String name;
+
+    Animal(String name) {
+        this.name = name;
+    }
+
+    abstract void makeSound();
+
+    void sleep() {
+        System.out.println(name + " is sleeping");
+    }
+}
+```
+
+Puis :
+
+```java
+class Dog extends Animal {
+
+    Dog(String name) {
+        super(name);
+    }
+
+    @Override
+    void makeSound() {
+        System.out.println("Woof");
+    }
+}
+```
+
+Utilisation :
+
+```java
+Dog dog = new Dog("Rex");
+
+dog.makeSound();
+dog.sleep();
+```
+
+Résultat :
+
+```text
+Woof
+Rex is sleeping
+```
+
+---
+
+# 7. Une classe abstraite peut avoir un constructeur
+
+Même si on ne peut pas créer directement un objet d'une classe abstraite, elle peut avoir un constructeur.
+
+Exemple :
+
+```java
+abstract class Animal {
+
+    String name;
+
+    Animal(String name) {
+        this.name = name;
+    }
+}
+```
+
+Lorsqu'une classe fille est créée, elle appelle le constructeur parent avec `super()`.
+
+```java
+class Dog extends Animal {
+
+    Dog(String name) {
+        super(name);
+    }
+}
+```
+
+---
+
+# 8. Interface
+
+Une **interface** définit principalement un contrat que les classes peuvent respecter.
+
+On utilise le mot-clé :
+
+```java
+interface
+```
+
+Exemple :
+
+```java
+interface Flyable {
+
+    void fly();
+}
+```
+
+Ici, l'interface indique simplement :
+
+> Toute classe qui implémente `Flyable` doit fournir une méthode `fly()`.
+
+---
+
+# 9. Implémenter une interface
+
+Une classe utilise le mot-clé :
+
+```java
+implements
+```
+
+Exemple :
+
+```java
+interface Flyable {
+
+    void fly();
+}
+```
+
+Puis :
+
+```java
+class Bird implements Flyable {
+
+    @Override
+    public void fly() {
+        System.out.println("The bird is flying");
+    }
+}
+```
+
+Utilisation :
+
+```java
+Bird bird = new Bird();
+
+bird.fly();
+```
+
+Résultat :
+
+```text
+The bird is flying
+```
+
+---
+
+# 10. Interface et méthodes abstraites
+
+Les méthodes d'une interface sont implicitement `public abstract` lorsqu'elles sont des méthodes abstraites.
+
+Ainsi :
+
+```java
+interface Animal {
+
+    void makeSound();
+}
+```
+
+est conceptuellement équivalent à :
+
+```java
+interface Animal {
+
+    public abstract void makeSound();
+}
+```
+
+On écrit généralement la première forme car elle est plus simple.
+
+---
+
+# 11. Une interface peut avoir des méthodes `default`
+
+Depuis Java 8, une interface peut contenir des méthodes `default` avec une implémentation.
+
+Exemple :
+
+```java
+interface Animal {
+
+    void makeSound();
+
+    default void sleep() {
+        System.out.println("Sleeping...");
+    }
+}
+```
+
+Une classe qui implémente l'interface possède automatiquement cette méthode.
+
+```java
+class Dog implements Animal {
+
+    @Override
+    public void makeSound() {
+        System.out.println("Woof");
+    }
+}
+```
+
+On peut faire :
+
+```java
+Dog dog = new Dog();
+
+dog.makeSound();
+dog.sleep();
+```
+
+---
+
+# 12. Une interface peut avoir des méthodes `static`
+
+Une interface peut également contenir des méthodes `static`.
+
+Exemple :
+
+```java
+interface Calculator {
+
+    static int add(int a, int b) {
+        return a + b;
+    }
+}
+```
+
+On appelle directement la méthode avec le nom de l'interface :
+
+```java
+System.out.println(Calculator.add(5, 3));
+```
+
+Résultat :
+
+```text
+8
+```
+
+---
+
+# 13. Une classe peut implémenter plusieurs interfaces
+
+C'est une différence importante avec l'héritage de classes.
+
+Une classe Java ne peut étendre qu'une seule classe :
+
+```java
+class Dog extends Animal {
+}
+```
+
+Mais elle peut implémenter plusieurs interfaces :
+
+```java
+class Duck implements Flyable, Swimmable {
+}
+```
+
+Exemple :
+
+```java
+interface Flyable {
+
+    void fly();
+}
+```
+
+```java
+interface Swimmable {
+
+    void swim();
+}
+```
+
+Puis :
+
+```java
+class Duck implements Flyable, Swimmable {
+
+    @Override
+    public void fly() {
+        System.out.println("Duck is flying");
+    }
+
+    @Override
+    public void swim() {
+        System.out.println("Duck is swimming");
+    }
+}
+```
+
+---
+
+# 14. Classe abstraite vs Interface
+
+C'est une distinction très importante en Java.
+
+## Classe abstraite
+
+Une classe abstraite représente généralement une **base commune** entre plusieurs classes.
+
+Elle peut contenir :
+
+```text
+Attributs
+Constructeurs
+Méthodes normales
+Méthodes abstraites
+```
+
+Exemple :
+
+```java
+abstract class Animal {
+
+    String name;
+
+    Animal(String name) {
+        this.name = name;
+    }
+
+    abstract void makeSound();
+
+    void sleep() {
+        System.out.println("Sleeping");
+    }
+}
+```
+
+---
+
+## Interface
+
+Une interface représente principalement un **contrat** ou une capacité.
+
+Exemple :
+
+```java
+interface Flyable {
+
+    void fly();
+}
+```
+
+Elle dit :
+
+> Une classe `Flyable` doit savoir voler.
+
+---
+
+# 15. Différences principales
+
+| Classe abstraite                         | Interface                                        |
+| ---------------------------------------- | ------------------------------------------------ |
+| `abstract class`                         | `interface`                                      |
+| Peut avoir des attributs d'instance      | Pas d'attributs d'instance classiques            |
+| Peut avoir un constructeur               | Pas de constructeur                              |
+| Peut avoir des méthodes abstraites       | Peut avoir des méthodes abstraites               |
+| Peut avoir des méthodes normales         | Peut avoir des méthodes `default`                |
+| Une classe peut étendre une seule classe | Une classe peut implémenter plusieurs interfaces |
+| Utilise `extends`                        | Utilise `implements`                             |
+| Représente souvent une base commune      | Représente souvent un contrat/capacité           |
+
+---
+
+# 16. Exemple concret : Animal
+
+Imaginons plusieurs animaux :
+
+```text
+Animal
+  │
+  ├── Dog
+  ├── Cat
+  └── Bird
+```
+
+On peut créer une classe abstraite :
+
+```java
+abstract class Animal {
+
+    String name;
+
+    Animal(String name) {
+        this.name = name;
+    }
+
+    abstract void makeSound();
+
+    void sleep() {
+        System.out.println(name + " is sleeping");
+    }
+}
+```
+
+Puis :
+
+```java
+class Dog extends Animal {
+
+    Dog(String name) {
+        super(name);
+    }
+
+    @Override
+    void makeSound() {
+        System.out.println("Woof");
+    }
+}
+```
+
+Et :
+
+```java
+class Cat extends Animal {
+
+    Cat(String name) {
+        super(name);
+    }
+
+    @Override
+    void makeSound() {
+        System.out.println("Meow");
+    }
+}
+```
+
+Ici, `Dog` et `Cat` ont des caractéristiques communes héritées de `Animal`.
+
+---
+
+# 17. Exemple avec une interface
+
+Maintenant, imaginons une capacité :
+
+```text
+Flyable
+   ↓
+peut voler
+```
+
+On peut créer :
+
+```java
+interface Flyable {
+
+    void fly();
+}
+```
+
+Un oiseau peut implémenter cette interface :
+
+```java
+class Bird implements Flyable {
+
+    @Override
+    public void fly() {
+        System.out.println("Bird is flying");
+    }
+}
+```
+
+Mais un avion peut également l'implémenter :
+
+```java
+class Airplane implements Flyable {
+
+    @Override
+    public void fly() {
+        System.out.println("Airplane is flying");
+    }
+}
+```
+
+Même si `Bird` et `Airplane` n'ont pas forcément de relation d'héritage, ils partagent une même **capacité** :
+
+```text
+Bird       ──┐
+             ├── Flyable
+Airplane   ──┘
+```
+
+C'est une utilisation très importante des interfaces.
+
+---
+
+# 18. Quand utiliser une classe abstraite ?
+
+Utilise une classe abstraite lorsque plusieurs classes ont une **base commune**.
+
+Par exemple :
+
+```text
+Vehicle
+   │
+   ├── Car
+   ├── Motorcycle
+   └── Truck
+```
+
+Si tous les véhicules possèdent :
+
+```text
+brand
+speed
+start()
+stop()
+```
+
+une classe abstraite peut être adaptée :
+
+```java
+abstract class Vehicle {
+
+    String brand;
+
+    Vehicle(String brand) {
+        this.brand = brand;
+    }
+
+    abstract void start();
+
+    void stop() {
+        System.out.println("Vehicle stopped");
+    }
+}
+```
+
+---
+
+# 19. Quand utiliser une interface ?
+
+Utilise une interface lorsque tu veux définir un **contrat** ou une **capacité**.
+
+Exemple :
+
+```text
+Flyable
+Swimmable
+Payable
+Printable
+Serializable
+```
+
+Par exemple :
+
+```java
+interface Payable {
+
+    void pay();
+}
+```
+
+Plusieurs classes peuvent implémenter ce comportement :
+
+```java
+class CreditCardPayment implements Payable {
+
+    @Override
+    public void pay() {
+        System.out.println("Payment by credit card");
+    }
+}
+```
+
+```java
+class PaypalPayment implements Payable {
+
+    @Override
+    public void pay() {
+        System.out.println("Payment by PayPal");
+    }
+}
+```
+
+---
+
+# 20. Utiliser les deux ensemble
+
+Il est possible d'utiliser une classe abstraite et des interfaces dans le même projet.
+
+Exemple :
+
+```java
+abstract class Animal {
+
+    String name;
+
+    Animal(String name) {
+        this.name = name;
+    }
+
+    abstract void makeSound();
+}
+```
+
+Interface :
+
+```java
+interface Flyable {
+
+    void fly();
+}
+```
+
+Puis :
+
+```java
+class Bird extends Animal implements Flyable {
+
+    Bird(String name) {
+        super(name);
+    }
+
+    @Override
+    void makeSound() {
+        System.out.println("Tweet");
+    }
+
+    @Override
+    public void fly() {
+        System.out.println("Bird is flying");
+    }
+}
+```
+
+Ici :
+
+```text
+Bird
+ │
+ ├── extends Animal
+ │
+ └── implements Flyable
+```
+
+`Animal` représente la **base commune**.
+
+`Flyable` représente une **capacité**.
+
+---
+
+# 21. Abstraction et polymorphisme
+
+L'abstraction est fortement liée au polymorphisme.
+
+On peut déclarer une variable avec le type abstrait :
+
+```java
+Animal animal = new Dog("Rex");
+```
+
+Même si l'objet réel est un `Dog`, on peut le manipuler à travers le type `Animal`.
+
+Exemple :
+
+```java
+animal.makeSound();
+```
+
+Java exécutera la version de `makeSound()` définie dans `Dog`.
+
+---
+
+# 22. Polymorphisme avec une interface
+
+La même chose fonctionne avec une interface.
+
+```java
+Flyable flyable = new Bird("Tweety");
+```
+
+Puis :
+
+```java
+flyable.fly();
+```
+
+Le programme n'a pas besoin de connaître tous les détails de `Bird`.
+
+Il sait simplement que l'objet respecte le contrat `Flyable`.
+
+---
+
+# 23. Exemple proche du backend
+
+Dans une application backend, on peut avoir :
+
+```text
+Payment
+   │
+   ├── CreditCardPayment
+   ├── PaypalPayment
+   └── BankPayment
+```
+
+On peut définir une interface :
+
+```java
+interface Payment {
+
+    void pay(double amount);
+}
+```
+
+Puis :
+
+```java
+class CreditCardPayment implements Payment {
+
+    @Override
+    public void pay(double amount) {
+        System.out.println("Credit card: " + amount);
+    }
+}
+```
+
+```java
+class PaypalPayment implements Payment {
+
+    @Override
+    public void pay(double amount) {
+        System.out.println("PayPal: " + amount);
+    }
+}
+```
+
+Le code qui utilise `Payment` n'a pas besoin de connaître tous les détails :
+
+```java
+Payment payment = new CreditCardPayment();
+
+payment.pay(100);
+```
+
+On peut ensuite remplacer :
+
+```java
+Payment payment = new PaypalPayment();
+```
+
+sans changer le code qui utilise `payment`.
+
+C'est l'un des avantages importants de l'abstraction.
+
+---
+
+# 24. Résumé : comment choisir ?
+
+```text
+J'ai plusieurs classes avec une base commune ?
+              ↓
+       Classe abstraite
+```
+
+Exemple :
+
+```text
+Animal
+ ├── Dog
+ ├── Cat
+ └── Bird
+```
+
+---
+
+```text
+Je veux définir un contrat ou une capacité ?
+              ↓
+           Interface
+```
+
+Exemple :
+
+```text
+Flyable
+Swimmable
+Payable
+Printable
+```
+
+---
+
+```text
+J'ai besoin d'une base commune
++ attributs + code partagé ?
+              ↓
+       Classe abstraite
+```
+
+---
+
+```text
+Je veux qu'une classe puisse avoir
+plusieurs comportements/capacités ?
+              ↓
+          Interfaces
+```
+
+---
+
+# 25. À retenir
+
+```text
+Abstraction
+    ↓
+Cacher les détails
+et exposer l'essentiel
+```
+
+### Classe abstraite
+
+```text
+abstract class
+       ↓
+Base commune
+       ↓
+Héritage avec extends
+       ↓
+Une seule classe parent
+```
+
+Elle peut contenir :
+
+```text
+Attributs
+Constructeur
+Méthodes normales
+Méthodes abstraites
+```
+
+### Interface
+
+```text
+interface
+    ↓
+Contrat / capacité
+    ↓
+Implémentation avec implements
+    ↓
+Plusieurs interfaces possibles
+```
+
+### La différence essentielle
+
+```text
+Classe abstraite
+    ↓
+"EST UN"
+    ↓
+Dog est un Animal
+
+Interface
+    ↓
+"PEUT FAIRE"
+    ↓
+Bird peut voler
+Airplane peut voler
+```
+
+Donc :
+
+> **Classe abstraite = base commune**
+
+> **Interface = contrat ou capacité**
+
+L'abstraction permet ainsi de concevoir des programmes plus flexibles, maintenables et faciles à faire évoluer.
