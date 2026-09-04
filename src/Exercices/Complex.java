@@ -1,3 +1,5 @@
+package Exercices;
+
 public class Complex {
     int reel;
     int imaginaire;

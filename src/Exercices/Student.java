@@ -1,3 +1,5 @@
+package Exercices;
+
 class Student {
     String nom;
     int note1, note2;
